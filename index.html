@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Appointments Booking</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <div>
+                    <h1 id="hospitalNameDisplay">🏥 City Hospital</h1>
+                    <p>Book your appointment easily and quickly</p>
+                </div>
+                <div class="header-admin">
+                    <button id="adminLoginBtn" class="btn-admin-login" onclick="showLoginPage()">Admin Login</button>
+                    <button id="adminLogoutBtn" class="btn-admin-logout" onclick="adminLogout()"
+                        style="display: none;">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <nav class="navbar">
+            <button class="nav-link active" id="navBooking" onclick="showBookingPage()">Book Appointment</button>
+            <button class="nav-link" id="navDashboard" onclick="showDashboard()" style="display: none;">Admin
+                Dashboard</button>
+            <button class="nav-link" id="navSettings" onclick="showSettings()" style="display: none;">Settings</button>
+        </nav>
+
+        <!-- Login Page -->
+        <div id="loginPage" class="page" style="display: none;">
+            <main style="display: grid; grid-template-columns: 1fr; margin-bottom: 40px;">
+                <div class="form-section" style="max-width: 400px; margin: 0 auto; width: 100%;">
+                    <h2>Admin Login</h2>
+                    <form onsubmit="adminLogin(event)">
+                        <div class="form-group">
+                            <label for="adminPassword">Admin Password</label>
+                            <input type="password" id="adminPassword" required placeholder="Enter admin password">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+                    <div id="loginError" class="message message-error" style="display: none;">
+                        ✗ Invalid password
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Booking Page -->
+        <div id="bookingPage" class="page active">
+            <main>
+                <div class="form-section">
+                    <h2>Book Your Appointment</h2>
+                    <form id="appointmentForm" onsubmit="bookAppointment(event)">
+
+                        <div class="form-group">
+                            <label for="patientName">Full Name *</label>
+                            <input type="text" id="patientName" required placeholder="Enter your full name">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email *</label>
+                                <input type="email" id="email" required placeholder="your@email.com">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone">Phone Number *</label>
+                                <input type="tel" id="phone" required placeholder="+1 (555) 000-0000">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="doctor">Select Doctor *</label>
+                                <select id="doctor" required>
+                                    <option value="">-- Choose a Doctor --</option>
+                                    <option value="Dr. John Smith">Dr. John Smith (General Medicine)</option>
+                                    <option value="Dr. Sarah Johnson">Dr. Sarah Johnson (Cardiology)</option>
+                                    <option value="Dr. Mike Davis">Dr. Mike Davis (Orthopedics)</option>
+                                    <option value="Dr. Emily Wilson">Dr. Emily Wilson (Dermatology)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="date">Preferred Date *</label>
+                                <input type="date" id="date" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="time">Preferred Time *</label>
+                                <select id="time" required>
+                                    <option value="">-- Select date and doctor first --</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="reason">Reason for Visit</label>
+                                <input type="text" id="reason" placeholder="e.g., Regular checkup, Consultation">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Book Appointment</button>
+                    </form>
+
+                    <div id="successMessage" class="message message-success" style="display: none;">
+                        ✓ Appointment booked successfully!
+                    </div>
+
+                    <div id="errorMessage" class="message message-error" style="display: none;">
+                        ✗ Error booking appointment. Please try again.
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <h3>📋 How to Book</h3>
+                    <ol>
+                        <li>Fill in your personal details</li>
+                        <li>Select your preferred doctor</li>
+                        <li>Choose a date and available time</li>
+                        <li>Submit the form</li>
+                        <li>Your appointment will be confirmed</li>
+                    </ol>
+
+                    <h3>⏰ Hospital Hours</h3>
+                    <p>Monday - Friday: 9:00 AM - 5:00 PM</p>
+                    <p>Saturday: 10:00 AM - 2:00 PM</p>
+                    <p>Sunday: Closed</p>
+                </div>
+            </main>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboardPage" class="page" style="display: none;">
+            <main>
+                <div class="dashboard-section">
+                    <h2>Appointments Dashboard</h2>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Total Appointments</h3>
+                            <div class="stat-number" id="totalAppointments">0</div>
+                        </div>
+                        <div class="stat-card success">
+                            <h3>Confirmed</h3>
+                            <div class="stat-number" id="confirmedCount">0</div>
+                        </div>
+                        <div class="stat-card danger">
+                            <h3>Cancelled</h3>
+                            <div class="stat-number" id="cancelledCount">0</div>
+                        </div>
+                        <div class="stat-card warning">
+                            <h3>Today's Appointments</h3>
+                            <div class="stat-number" id="todayCount">0</div>
+                        </div>
+                    </div>
+
+                    <div class="appointments-list">
+                        <h3>All Appointments</h3>
+                        <div id="appointmentsList"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settingsPage" class="page" style="display: none;">
+            <main style="display: block; margin-bottom: 40px;">
+                <div class="dashboard-section">
+                    <h2>Admin Settings</h2>
+
+                    <!-- Hospital Info Tab -->
+                    <div class="settings-tabs">
+                        <button class="tab-btn active" onclick="showTab('hospital-tab')">Hospital Info</button>
+                        <button class="tab-btn" onclick="showTab('doctors-tab')">Manage Doctors</button>
+                        <button class="tab-btn" onclick="showTab('timings-tab')">Doctor Timings</button>
+                    </div>
+
+                    <!-- Hospital Info -->
+                    <div id="hospital-tab" class="tab-content active" style="display: block;">
+                        <h3>Hospital Information</h3>
+                        <form onsubmit="updateHospitalInfo(event)">
+                            <div class="form-group">
+                                <label for="hospitalName">Hospital Name</label>
+                                <input type="text" id="hospitalName" required placeholder="Hospital Name">
+                            </div>
+                            <div class="form-group">
+                                <label>Hospital Hours</label>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                    <div>
+                                        <label style="font-size: 0.9rem; margin-bottom: 5px;">Weekdays (Mon-Fri)</label>
+                                        <input type="time" id="weekdayStart" placeholder="Start time">
+                                        <input type="time" id="weekdayEnd" placeholder="End time"
+                                            style="margin-top: 5px;">
+                                    </div>
+                                    <div>
+                                        <label style="font-size: 0.9rem; margin-bottom: 5px;">Saturday</label>
+                                        <input type="time" id="saturdayStart" placeholder="Start time">
+                                        <input type="time" id="saturdayEnd" placeholder="End time"
+                                            style="margin-top: 5px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Hospital Info</button>
+                        </form>
+                        <div id="hospitalSuccess" class="message message-success" style="display: none;">
+                            ✓ Hospital information updated!
+                        </div>
+                    </div>
+
+                    <!-- Manage Doctors -->
+                    <div id="doctors-tab" class="tab-content" style="display: none;">
+                        <h3>Manage Doctors</h3>
+                        <form onsubmit="addDoctor(event)">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="doctorName">Doctor Name</label>
+                                    <input type="text" id="doctorName" required placeholder="e.g., Dr. John Smith">
+                                </div>
+                                <div class="form-group">
+                                    <label for="doctorSpecialty">Specialty</label>
+                                    <input type="text" id="doctorSpecialty" required placeholder="e.g., Cardiology">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Doctor</button>
+                        </form>
+
+                        <h4 style="margin-top: 30px; color: var(--primary-color);">Current Doctors</h4>
+                        <div id="doctorsList"></div>
+                        <div id="noDoctorsMsg" class="empty-message">No doctors added yet</div>
+                    </div>
+
+                    <!-- Doctor Timings -->
+                    <div id="timings-tab" class="tab-content" style="display: none;">
+                        <h3>Doctor Timings & Slots</h3>
+                        <form onsubmit="updateDoctorTimings(event)">
+                            <div class="form-group">
+                                <label for="timingDoctor">Select Doctor</label>
+                                <select id="timingDoctor" required onchange="loadDoctorTimingDetails()">
+                                    <option value="">-- Choose a Doctor --</option>
+                                </select>
+                            </div>
+
+                            <div id="timingDetails" style="display: none;">
+                                <div class="form-group">
+                                    <label for="startTime">Start Time</label>
+                                    <input type="time" id="startTime" value="09:00">
+                                </div>
+                                <div class="form-group">
+                                    <label for="endTime">End Time</label>
+                                    <input type="time" id="endTime" value="17:00">
+                                </div>
+                                <div class="form-group">
+                                    <label for="slotDuration">Slot Duration (minutes)</label>
+                                    <input type="number" id="slotDuration" min="15" max="120" value="30">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Timings</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Hospital Appointments System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
